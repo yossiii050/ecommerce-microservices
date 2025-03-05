@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mango.Services.CouponAPI", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mango.Web", "Mango.Web\Mango.Web.csproj", "{08372F5F-D647-4281-92D4-C61A033421EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mango.Services.AuthApi", "Mango.Services.AuthApi\Mango.Services.AuthApi.csproj", "{CC7EF275-46C6-445F-91ED-F96C2EAE981C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mango.Services.AuthApi", "Mango.Services.AuthApi\Mango.Services.AuthApi.csproj", "{CC7EF275-46C6-445F-91ED-F96C2EAE981C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
