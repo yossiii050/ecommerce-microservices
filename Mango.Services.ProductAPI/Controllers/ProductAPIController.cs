@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace Mango.Services.ProductAPI
+namespace Mango.Services.ProductAPI.Controllers
 {
-    [Route("/api/product")]
+    [Route("/api/product/")]
     [ApiController]
     [Authorize]
     public class ProductAPIController
@@ -20,9 +20,9 @@ namespace Mango.Services.ProductAPI
 
         public ProductAPIController(AppDbContext db, IMapper mapper)
         {
-            _db= db;
-            _mapper= mapper;
-            _response= new ResponseDto();
+            _db = db;
+            _mapper = mapper;
+            _response = new ResponseDto();
         }
 
 
@@ -32,7 +32,7 @@ namespace Mango.Services.ProductAPI
             try
             {
                 IEnumerable<Product> objList = _db.Products.ToList();
-                _response.Result=_mapper.Map<IEnumerable<ProductDto>>(objList);
+                _response.Result = _mapper.Map<IEnumerable<ProductDto>>(objList);
             }
             catch (Exception ex)
             {
@@ -48,7 +48,7 @@ namespace Mango.Services.ProductAPI
         {
             try
             {
-                Product obj = _db.Products.First(u => u.ProductId==id);
+                Product obj = _db.Products.First(u => u.ProductId == id);
                 _response.Result = _mapper.Map<ProductDto>(obj);
             }
             catch (Exception ex)
@@ -58,6 +58,7 @@ namespace Mango.Services.ProductAPI
             }
             return _response;
         }
+
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
@@ -108,7 +109,7 @@ namespace Mango.Services.ProductAPI
         {
             try
             {
-                Product obj = _db.Products.First(u => u.ProductId==id);
+                Product obj = _db.Products.First(u => u.ProductId == id);
                 _db.Products.Remove(obj);
                 _db.SaveChanges();
 
