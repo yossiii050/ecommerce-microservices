@@ -63,7 +63,7 @@ namespace Mango.Web.Controllers
             if (response != null && response.IsSuccess)
             {
                 CouponDto? model=JsonConvert.DeserializeObject<CouponDto>(Convert.ToString(response.Result));
-                TempData["success"]="Coupon deleted successfully";
+                //TempData["success"]="Coupon deleted successfully";
                 return View(model);
             }
             else
