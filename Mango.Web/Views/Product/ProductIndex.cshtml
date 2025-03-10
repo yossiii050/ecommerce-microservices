@@ -46,7 +46,7 @@
 							@item.Price
 						</td>
 						<td>
-							<a class="btn btn-success">
+							<a class="btn btn-success" asp-action="ProductEdit" asp-route-productId="@item.ProductId">
 								<i class="bi bi-pencil-square"></i>
 							</a>
 							<a asp-action="ProductDelete" asp-route-productId="@item.ProductId" class="btn btn-danger">
