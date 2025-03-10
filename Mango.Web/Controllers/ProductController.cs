@@ -55,22 +55,6 @@ namespace Mango.Web.Controllers
 			return View(model);
 		}
 
-        //public async Task<IActionResult> ProductDelete(int productId)
-        //{
-        //    ResponseDto? response = await _productService.GetProductAsync(productId);
-
-        //    if (response != null && response.IsSuccess)
-        //    {
-        //        ProductDto? model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
-        //        TempData["success"]="Coupon deleted successfully";
-        //        return View(model);
-        //    }
-        //    else
-        //    {
-        //        TempData["error"]=response?.Message;
-        //    }
-        //    return NotFound();
-        //}
 
         
         public async Task<IActionResult> ProductDelete(int productId)
