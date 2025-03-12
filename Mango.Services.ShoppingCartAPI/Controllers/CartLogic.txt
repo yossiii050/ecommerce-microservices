@@ -1,0 +1,13 @@
+﻿Shopping cart Logic:
+
+1. USer adds first Item to the cart
+- create cart header
+- create cart details
+
+2. USer adds a new Item in the cart
+- find cart header
+- add cart details under same cart header ID
+
+3. USer updates quantity of Item in the cart
+- find cart Details
+- update count in cart Details
