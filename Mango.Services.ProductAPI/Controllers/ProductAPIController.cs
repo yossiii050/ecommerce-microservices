@@ -87,12 +87,15 @@ namespace Mango.Services.ProductAPI.Controllers
         {
             try
             {
-                Product obj = _mapper.Map<Product>(productDto);
-                _db.Products.Update(obj);
+                
+                var existingProduct = _db.Products.Find(productDto.ProductId);
+                if (existingProduct == null)
+                    throw new Exception("Product not found");
+
+                _mapper.Map(productDto, existingProduct);
                 _db.SaveChanges();
 
-                _response.Result = _mapper.Map<ProductDto>(obj);
-
+                _response.Result = _mapper.Map<ProductDto>(existingProduct);
             }
             catch (Exception ex)
             {
@@ -101,6 +104,10 @@ namespace Mango.Services.ProductAPI.Controllers
             }
             return _response;
         }
+
+        
+
+
 
         [Route("{id:int}")]
         [HttpDelete]
