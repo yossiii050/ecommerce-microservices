@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Azure;
+using Mango.MessageBus;
 using Mango.Services.ShoppingCartAPI.Data;
 using Mango.Services.ShoppingCartAPI.Models;
 using Mango.Services.ShoppingCartAPI.Models.Dto;
@@ -21,16 +22,18 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         private IMapper _mapper;
         private IProductService _productService;
         private ICouponService _couponService;
+        private IMessageBus _messageBus;
+        private IConfiguration _configuration;
 
-        public CartAPIController(AppDbContext db, IMapper mapper,IProductService productService, ICouponService couponService)
+        public CartAPIController(AppDbContext db, IMapper mapper,IProductService productService, ICouponService couponService,IMessageBus messageBus, IConfiguration configuration)
         {
             _db = db;
             _mapper = mapper;
             this._response = new ResponseDto();
             _productService = productService;
             _couponService=couponService;
-
-            _couponService=couponService;
+            _messageBus = messageBus;
+            _configuration = configuration;
         }
 
         [HttpGet("GetCart/{userId}")]
@@ -97,26 +100,23 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             return _response;
         }
 
-        //[HttpPost("RemoveCoupon")]
-        //public async Task<object> RemoveCoupon([FromBody] CartDto cartDto)
-        //{
-        //    try
-        //    {
-        //        var cartFromDb = await _db.CartHeaders.FirstAsync(u => u.UserID == cartDto.CartHeader.UserID);
-        //        cartFromDb.CouponCode="";
-        //        _db.CartHeaders.Update(cartFromDb);
+        [HttpPost("EmailCartRequest")]
+        public async Task<object> EmailCartRequest([FromBody] CartDto cartDto)
+        {
+            try
+            {
+                await _messageBus.PublicMessage(cartDto, _configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCart"));
+                _response.Result = true;
+            }
+            catch (Exception ex)
+            {
 
-        //        await _db.SaveChangesAsync();
-        //        _response.Result = true;
-        //    }
-        //    catch (Exception ex)
-        //    {
+                _response.Message=ex.ToString();
+                _response.IsSuccess=false;
+            }
+            return _response;
+        }
 
-        //        _response.Message=ex.ToString();
-        //        _response.IsSuccess=false;
-        //    }
-        //    return _response;
-        //}
 
         [HttpPost("CartUpsert")]
         public async Task<ResponseDto> CartUpsert(CartDto cartDto)
