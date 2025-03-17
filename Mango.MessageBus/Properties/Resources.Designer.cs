@@ -59,5 +59,14 @@ namespace Mango.MessageBus.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Endpoint=sb://yossimicroweb.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=+Ke5UrYzJ+LKMnqjxa0xK/wS3oR2gHGvH+ASbK4EtE4=.
+        /// </summary>
+        internal static string AZURE_SERVICE_BUS_CONNECTION_STRING {
+            get {
+                return ResourceManager.GetString("AZURE_SERVICE_BUS_CONNECTION_STRING", resourceCulture);
+            }
+        }
     }
 }
