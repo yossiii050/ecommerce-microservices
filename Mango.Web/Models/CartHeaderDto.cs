@@ -1,4 +1,6 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
+
 namespace Mango.Web.Models.Dto
 {
     public class CartHeaderDto
@@ -10,9 +12,11 @@ namespace Mango.Web.Models.Dto
         public double Discount { get; set; }
         public double CartTotal { get; set; }
         //for services bus
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
+        [Required]
+        public string? Name { get; set; }
+        [Required]
         public string? Phone { get; set; }
+        [Required]
         public string? Email { get; set; }
 
     }
