@@ -1,0 +1,51 @@
+﻿@model int
+<div class="confirmation-container center" >
+    <h1>Order Confirmation</h1>
+    <p>Your order has been successfully placed!</p>
+    <div class="order-number">
+        Order Number: @Model
+    </div>
+    <a href="/" class="btn-home">Return Home</a>
+</div>
+
+<style>
+
+
+
+    .confirmation-container {
+
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        text-align: center;
+        width: 400px;
+    }
+
+    h1 {
+        color: #4CAF50;
+    }
+
+
+
+    .order-number {
+        font-size: 22px;
+        font-weight: bold;
+        margin-top: 10px;
+        color: #2196F3;
+    }
+
+    .btn-home {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+        .btn-home:hover {
+            background-color: #45a049;
+        }
+</style>

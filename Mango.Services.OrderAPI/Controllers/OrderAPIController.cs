@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Mango.Services.OrderAPI.Utillity;
 using Mango.Services.OrderAPI.Models;
+using Microsoft.Extensions.Options;
+using Stripe;
+using Stripe.Checkout;
 
 namespace Mango.Services.OrderAPI.Controllers
 {
@@ -58,5 +61,60 @@ namespace Mango.Services.OrderAPI.Controllers
 
         }
 
+
+        [Authorize]
+        [HttpPost("CreateStripeSession")]
+        public async Task<ResponseDto> CreateStripeSession([FromBody] StripeRequestDto stripeRequestDto)
+        {
+            try
+            {
+
+                var options = new SessionCreateOptions
+                {
+                    SuccessUrl =stripeRequestDto.ApproveUrl,
+                    CancelUrl =stripeRequestDto.CancelUrl,
+                    LineItems = new List<SessionLineItemOptions>(),
+                    Mode = "payment",
+                };
+
+
+                foreach(var item in stripeRequestDto.orderHeader.OrderDetails)
+                {
+                    var sessionLineItem = new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount=(long)(item.Price*100),
+                            Currency="ils",
+                            ProductData=new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name=item.Product.Name
+                            }
+
+                        },
+                        Quantity=item.Count
+                    };
+
+                    options.LineItems.Add(sessionLineItem);
+                }
+
+
+                var service = new SessionService();
+                Session session=service.Create(options);
+                stripeRequestDto.StripeSessionUrl = session.Url;
+                OrderHeader orderHeader = _db.OrderHeaders.First(u => u.OrderHeaderId==stripeRequestDto.orderHeader.OrderHeaderId);
+                orderHeader.StripeSessionId=session.Id;
+                _db.SaveChanges();
+
+                _response.Result=stripeRequestDto;
+            }
+            catch (Exception ex)
+            {
+
+                _response.Message=ex.Message;
+                _response.IsSuccess=false;
+            }
+            return _response;
+        }
     }
 }
