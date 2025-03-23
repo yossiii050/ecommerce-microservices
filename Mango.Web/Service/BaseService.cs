@@ -23,9 +23,16 @@ namespace Mango.Web.Service
             {
                 HttpClient client = _httpClientFactory.CreateClient("MangoApi");
                 HttpRequestMessage message = new();
-                message.Headers.Add("Accept", "application/json");
-
+                if(requestDto.ContentType == ContentType.MultipartFormData)
+                {
+					message.Headers.Add("Accept", "*/*");
+				}
+                else
+                {
+					message.Headers.Add("Accept", "application/json");
+				}
                 
+                //token
                 if (withBearer)
                 {
                     var token = _tokenProvider.getToken();
@@ -33,12 +40,38 @@ namespace Mango.Web.Service
                 }
 
                 message.RequestUri=new Uri(requestDto.Url);
-                if (requestDto.Data != null)
-                {
-                    message.Content= new StringContent(JsonConvert.SerializeObject(requestDto.Data), Encoding.UTF8, "application/json");
-                }
 
-                HttpResponseMessage? apiResponse = null;
+                if(requestDto.ContentType == ContentType.MultipartFormData)
+                {
+                    var content = new MultipartFormDataContent();
+
+                    foreach (var prop in requestDto.Data.GetType().GetProperties())
+                    {
+                        var value= prop.GetValue(requestDto.Data);
+                        if(value is FormFile)
+                        {
+                            var file = (FormFile)value;
+                            if(file != null)
+                            {
+                                content.Add(new StreamContent(file.OpenReadStream()), prop.Name, file.FileName);
+
+                            }
+                        }
+                    }
+                }
+                else
+                {
+
+					if (requestDto.Data != null)
+					{
+						message.Content= new StringContent(JsonConvert.SerializeObject(requestDto.Data), Encoding.UTF8, "application/json");
+					}
+
+				}
+
+
+
+				HttpResponseMessage? apiResponse = null;
 
                 switch (requestDto.ApiType)
                 {

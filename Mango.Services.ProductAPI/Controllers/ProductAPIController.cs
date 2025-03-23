@@ -5,6 +5,8 @@ using Mango.Services.ProductAPI.Models.Dto;
 using Microsoft.AspNetCore.Authorization;
 
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
+using System.Security.Principal;
 
 namespace Mango.Services.ProductAPI.Controllers
 {
@@ -66,11 +68,27 @@ namespace Mango.Services.ProductAPI.Controllers
         {
             try
             {
-                Product obj = _mapper.Map<Product>(productDto);
-                _db.Products.Add(obj);
+                Product product = _mapper.Map<Product>(productDto);
+                _db.Products.Add(product);
                 _db.SaveChanges();
 
-                _response.Result = _mapper.Map<ProductDto>(obj);
+                if(productDto.Image != null)
+                {
+                    string filename = product.ProductId+Path.GetExtension(productDto.Image.FileName);
+
+                    String filePath = @"wwwroot\ProductImages\"+filename;
+                    var filePathDirectory=Path.Combine(Directory.GetCurrentDirectory(), filePath);
+                    
+                    using (var fileStream = new FileStream(filePathDirectory,FileMode.Create))
+                    {
+                        productDto.Image.CopyTo(fileStream);
+                    }
+					var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
+					product.ImageUrl = ""+""+filePath;
+                    product.ImageLocalPath = filePath;
+                }
+
+                _response.Result = _mapper.Map<ProductDto>(product);
 
             }
             catch (Exception ex)
