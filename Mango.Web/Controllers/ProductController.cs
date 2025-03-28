@@ -95,7 +95,7 @@ namespace Mango.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                ResponseDto? response = await _productService.UpdateProductsAsync(productDto);
+                ResponseDto? response = await _productService.EditProductAsync(productDto);
 
                 if (response != null && response.IsSuccess)
                 {

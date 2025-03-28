@@ -13,8 +13,8 @@ namespace Mango.Services.ProductAPI.Controllers
     [Route("/api/product/")]
     [ApiController]
     //[Authorize]
-    public class ProductAPIController
-    {
+    public class ProductAPIController:ControllerBase
+	{
 
         private readonly AppDbContext _db;
         private ResponseDto _response;
@@ -64,7 +64,7 @@ namespace Mango.Services.ProductAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
-        public ResponseDto Post([FromBody] ProductDto productDto)
+        public ResponseDto Post(ProductDto productDto)
         {
             try
             {
@@ -84,11 +84,18 @@ namespace Mango.Services.ProductAPI.Controllers
                         productDto.Image.CopyTo(fileStream);
                     }
 					var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
-					product.ImageUrl = ""+""+filePath;
+					product.ImageUrl = baseUrl+"/ProductImages/"+filename;
                     product.ImageLocalPath = filePath;
                 }
 
-                _response.Result = _mapper.Map<ProductDto>(product);
+                else
+                {
+					product.ImageUrl = "https://placehold.co/600x400";
+
+				}
+                _db.Products.Update(product);
+                _db.SaveChanges();
+				_response.Result = _mapper.Map<ProductDto>(product);
 
             }
             catch (Exception ex)
@@ -101,19 +108,43 @@ namespace Mango.Services.ProductAPI.Controllers
 
         [HttpPut]
         [Authorize(Roles = "ADMIN")]
-        public ResponseDto Put([FromBody] ProductDto productDto)
+        public ResponseDto Put( ProductDto productDto)
         {
             try
-            {
-                
-                var existingProduct = _db.Products.Find(productDto.ProductId);
-                if (existingProduct == null)
-                    throw new Exception("Product not found");
+            {               
+               Product product = _mapper.Map<Product>(productDto);
 
-                _mapper.Map(productDto, existingProduct);
+
+                if (productDto.Image != null)
+                {
+                    if (!string.IsNullOrEmpty(product.ImageLocalPath))
+                    {
+                        var oldFilePathDir = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPath);
+                        FileInfo file = new FileInfo(oldFilePathDir);
+                        if (file.Exists)
+                        {
+                            file.Delete();
+                        }
+                    }
+
+                    string filename = product.ProductId+Path.GetExtension(productDto.Image.FileName);
+
+                    String filePath = @"wwwroot\ProductImages\"+filename;
+                    var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+
+                    using (var fileStream = new FileStream(filePathDirectory, FileMode.Create))
+                    {
+                        productDto.Image.CopyTo(fileStream);
+                    }
+                    var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
+                    product.ImageUrl = baseUrl+"/ProductImages/"+filename;
+                    product.ImageLocalPath = filePath;
+                }
+
+                _db.Products.Update(product);
                 _db.SaveChanges();
 
-                _response.Result = _mapper.Map<ProductDto>(existingProduct);
+                _response.Result = _mapper.Map<ProductDto>(product);
             }
             catch (Exception ex)
             {
@@ -135,6 +166,17 @@ namespace Mango.Services.ProductAPI.Controllers
             try
             {
                 Product obj = _db.Products.First(u => u.ProductId == id);
+
+                if (!string.IsNullOrEmpty(obj.ImageLocalPath))
+                {
+                    var oldFilePathDir=Path.Combine(Directory.GetCurrentDirectory(), obj.ImageLocalPath);
+                    FileInfo file= new FileInfo(oldFilePathDir);
+                    if (file.Exists)
+                    {
+                        file.Delete();
+                    }
+                }
+
                 _db.Products.Remove(obj);
                 _db.SaveChanges();
 

@@ -57,7 +57,14 @@ namespace Mango.Web.Service
 
                             }
                         }
+                        else
+                        {
+                            content.Add(new StringContent(value==null ? "" : value.ToString()),prop.Name);
+
+                        }
+
                     }
+                    message.Content = content;
                 }
                 else
                 {
