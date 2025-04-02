@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Mango.Web.Utillity
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -26,9 +27,7 @@
                         <li class="nav-item">
                             <a class="nav-link " asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                       @if(User.IsInRole(SD.RoleAdmin)){
                         <li class="nav-item dropdown" >
                             <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Content Menagement
@@ -42,11 +41,13 @@
                                 <li><a class="dropdown-item " href="#">Something else here</a></li>
                             </ul>
                         </li>
+                        
                         <li class="nav-item">
                             <a class="nav-link " asp-area="" asp-controller="Order" asp-action="OrderIndex">
                                Manage Order
                             </a>
-                        </li>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link " asp-area="" asp-controller="Cart" asp-action="CartIndex">
                                 &nbsp;<i class="bi bi-cart"></i>&nbsp;
