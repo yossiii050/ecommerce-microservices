@@ -1,10 +1,8 @@
+<p align="center">
 
+<img src="https://sdmntprwestus.oaiusercontent.com/files/00000000-3c0c-6230-92ad-0cf3bb8ceb19/raw?se=2025-04-11T18%3A35%3A54Z&sp=r&sv=2024-08-04&sr=b&scid=8ce231bc-a6f4-5550-a0de-360cfc721cb5&skoid=aa8389fc-fad7-4f8c-9921-3c583664d512&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-04-11T07%3A09%3A28Z&ske=2025-04-12T07%3A09%3A28Z&sks=b&skv=2024-08-04&sig=C1gB6PowlhdG7fxBY/20zxdK8XagfPk80fsdIe1AGHM%3D" width="250">
+</p>
 
-
-
-
-
----
 
 # E-Commerce Microservices Platform
 
